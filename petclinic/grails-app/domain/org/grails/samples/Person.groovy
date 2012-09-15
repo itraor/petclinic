@@ -1,7 +1,7 @@
-package org.grails.samples;
+package org.grails.samples
 
 /**
- * Simple domain object representing an person.
+ * Simple domain object representing a person.
  *
  * @author Graeme Rocher
  */
@@ -9,9 +9,9 @@ class Person {
 
 	String firstName
 	String lastName
-	
+
 	static constraints = {
-		firstName blank:false
-		lastName blank:false
+		firstName blank: false
+		lastName blank: false
 	}
 }

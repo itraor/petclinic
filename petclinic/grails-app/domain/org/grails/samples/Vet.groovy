@@ -1,6 +1,5 @@
 package org.grails.samples;
 
-
 /**
  * Simple domain object representing a veterinarian.
  *
@@ -8,5 +7,5 @@ package org.grails.samples;
  */
 class Vet extends Person {
 
-	static hasMany = [specialities:Speciality]
+	static hasMany = [specialities: Speciality]
 }

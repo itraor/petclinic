@@ -1,36 +1,34 @@
-import org.grails.samples.*
+import org.grails.samples.PetType
+import org.grails.samples.Speciality
+import org.grails.samples.Vet
 
 class BootStrap {
 
-     def init = { servletContext ->
-	    if(!Speciality.count()) {
-			def rad =	new Speciality(name:"radiology").save()
-			def sur =	new Speciality(name:"surgery").save()
-			def den =	new Speciality(name:"dentistry").save()						
-			
-			new Vet(firstName:"James", lastName:"Carter").save()
-			new Vet(firstName:"Helen", lastName:"Leary")
-					.addToSpecialities(rad)
-					.save()
-			new Vet(firstName:"Linda", lastName:"Douglas")
-					.addToSpecialities(sur)
-					.addToSpecialities(den)
-					.save()
-			new Vet(firstName:"Rafael", lastName:"Ortega")
-					.addToSpecialities(sur)
-					.save()									
-			new Vet(firstName:"Henry", lastName:"Stevens")
-					.addToSpecialities(rad)
-					.save()												
-			new Vet(firstName:"Sharon", lastName:"Jenkins").save()															
-		
-			['dog', 'lizard','cat', 'snake','bird', 'hamster'].each {
-							new PetType(name:it).save()
+	def init = { servletContext ->
+		if (!Speciality.count()) {
+			def radiology = new Speciality(name: 'radiology').save(failOnError: true)
+			def surgery =   new Speciality(name: 'surgery').save(failOnError: true)
+			def dentistry = new Speciality(name: 'dentistry').save(failOnError: true)
+
+			new Vet(firstName: 'James', lastName: 'Carter').save(failOnError: true)
+			new Vet(firstName: 'Helen', lastName: 'Leary')
+					.addToSpecialities(radiology)
+					.save(failOnError: true)
+			new Vet(firstName: 'Linda', lastName: 'Douglas')
+					.addToSpecialities(surgery)
+					.addToSpecialities(dentistry)
+					.save(failOnError: true)
+			new Vet(firstName: 'Rafael', lastName: 'Ortega')
+					.addToSpecialities(surgery)
+					.save(failOnError: true)
+			new Vet(firstName: 'Henry', lastName: 'Stevens')
+					.addToSpecialities(radiology)
+					.save(failOnError: true)
+			new Vet(firstName: 'Sharon', lastName: 'Jenkins').save(failOnError: true)
+
+			for (String type in ['dog', 'lizard', 'cat', 'snake', 'bird', 'hamster']) {
+				new PetType(name: type).save(failOnError: true)
 			}
-
 		}
-
-     }
-     def destroy = {
-     }
-} 
+	}
+}

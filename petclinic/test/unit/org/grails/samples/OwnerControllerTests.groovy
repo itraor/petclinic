@@ -1,77 +1,83 @@
 package org.grails.samples
 
-class OwnerControllerTests extends grails.test.ControllerUnitTestCase {
+import org.junit.Before
+
+import grails.test.mixin.Mock
+import grails.test.mixin.TestFor
+
+@TestFor(OwnerController)
+@Mock(Owner)
+class OwnerControllerTests {
+
+	@Before
+	void setUp() {
+		controller.petclinicService = new PetclinicService()
+	}
 
 	void testAddGET() {
-		def controller = newInstance()
-		
 		controller.request.method = 'GET'
 		def model = controller.add()
-		
-		assertNotNull model.ownerBean
-		assertTrue model.ownerBean instanceof Owner
+
+		assert model.ownerBean instanceof Owner
 	}
-	
+
 	void testAddInvalidOwner() {
-		def controller = newInstance()
-		mockDomain(Owner)
 		controller.request.method = 'POST'
-		
-		controller.add()
-		
-		assertEquals "add", renderArgs.view
-		assertNotNull renderArgs.model.ownerBean
+
+		def model = controller.add()
+
+		assert model.ownerBean?.hasErrors()
+
+		assert null == view
 	}
-	
+
 	void testValidOwner() {
-		def controller = newInstance()		
-		mockDomain(Owner)
-		
-		controller.params.owner = [firstName:'fred',
-								   lastName:'flintstone',	
-								   address:'rocky street',		
-								   city:'dinoville',		
-		 						   telephone:'347239873']		
-		
+		controller.params.owner = [
+			firstName: 'fred',
+			lastName:  'flintstone',
+			address:   'rocky street',
+			city:      'dinoville',
+			telephone: '347239873']
+
 		controller.add()
-		
-		assertEquals "show", redirectArgs.action		
+
+		assert controller.response.redirectUrl =~ '/owner/show/\\d+'
 	}
-	
+
 	void testFindNoResults() {
-		def controller = newInstance()
-		mockDomain(Owner)
 		controller.request.method = 'POST'
-		
-		def model = controller.find.call()
-		assertEquals 'owners.not.found', model?.message
+
+		def model = controller.find()
+		assert 'owners.not.found' == model?.message
 	}
-	
+
 	void testFindOneResult() {
-		mockDomain(Owner, [new Owner(id:10L,lastName:"flintstone")])
-		
-		def controller = newInstance()
+		def owner = createOwner(lastName: 'flintstone')
+		assert owner.save()
+
 		controller.request.method = 'POST'
 		controller.params.lastName = 'flintstone'
-		controller.find.call()
-		
-		
-		assertEquals "show", redirectArgs.action
-		assertEquals 10L, redirectArgs.id
+		controller.find()
+
+		assert '/owner/show/' + owner.id == controller.response.redirectUrl
 	}
-	
+
 	void testFindManyResults() {
-			mockDomain(Owner, [new Owner(id:10L,lastName:"flintstone"),new Owner(id:12L,lastName:"flintstone")])
+		createOwner(lastName: 'flintstone').save()
+		createOwner(lastName: 'flintstone').save()
 
-			def controller = newInstance()
-			controller.request.method = 'POST'
-			controller.params.lastName = 'flintstone'
-			controller.find.call()
+		controller.request.method = 'POST'
+		controller.params.lastName = 'flintstone'
+		controller.find()
 
-
-			assertEquals "selection", renderArgs.view
-			assertNotNull renderArgs.model.owners			
-			assertEquals 2, renderArgs.model.owners.size()		
+		assert '/owner/selection' == view
+		assert 2 == model?.owners?.size()
 	}
 
+	private Owner createOwner(Map data) {
+		def owner = new Owner(address: 'the address', city: 'the city', telephone: '1234567890',
+		                      firstName: 'first', lastName: 'last')
+		owner.properties = data
+		owner
+	}
 }

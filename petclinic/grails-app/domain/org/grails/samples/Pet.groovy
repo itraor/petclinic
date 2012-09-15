@@ -1,4 +1,4 @@
-package org.grails.samples;
+package org.grails.samples
 
 /**
  * Simple domain object representing a pet.
@@ -11,12 +11,12 @@ class Pet {
 	Date birthDate
 	PetType type
 	Owner owner
-	
-	static hasMany = [visits:Visit]
-	
+
+	static hasMany = [visits: Visit]
+
 	static constraints = {
 		name blank:false, validator: { val, obj ->
-			if(!obj.id && obj.owner?.pets?.find { it.name == val } ) return "pet.duplicate"
+			if (!obj.id && obj.owner?.pets?.find { it.name == val } ) return 'pet.duplicate'
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package org.grails.samples;
+package org.grails.samples
 
 /**
  * Simple domain object representing an owner.
@@ -11,11 +11,11 @@ class Owner extends Person {
 	String city
 	String telephone
 
-	static hasMany = [pets:Pet]
-	
+	static hasMany = [pets: Pet]
+
 	static constraints = {
-		address blank:false
-		city blank:false		
-		telephone matches:/\d+/, blank:false
+		address blank: false
+		city blank: false
+		telephone matches: /\d+/, blank: false
 	}
 }

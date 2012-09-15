@@ -1,8 +1,8 @@
-package org.grails.samples;
+package org.grails.samples
 
 /**
  * @author Graeme Rocher
  */
-class PetType  {
+class PetType {
 	String name
 }
